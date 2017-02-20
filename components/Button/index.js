@@ -23,6 +23,8 @@ export default ({onClick, type = 'primary', children}) => (
       display: 'inline-block',
       textAlign: 'center',
       border: 'none',
+      fontSize: 18,
+      outline: 'none',
       borderRadius: borderRadii.medium,
       ...stylesByType[type]
     }}
