@@ -20,6 +20,7 @@ export default ({onClick, type = 'primary', children}) => (
       paddingBottom: spacing.medium,
       paddingLeft: spacing.large,
       paddingRight: spacing.large,
+      cursor: 'pointer',
       display: 'inline-block',
       textAlign: 'center',
       border: 'none',
