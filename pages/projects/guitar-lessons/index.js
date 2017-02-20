@@ -1,136 +1,12 @@
 import React, {Component} from 'react'
 import {startCase} from 'lodash'
 import {uiGroups, spacing, borderSizes} from '../../../components/utils/styleGuide'
+import Link from 'next/Link';
 import Screen from '../../../components/Screen'
 import Heading from '../../../components/Heading'
 import Button from '../../../components/Button'
 
-const GuitarPattern = ({
-  strings,
-  highlightedDegreesByString,
-  noteSize = 20,
-  fretSize = 60,
-}) => (
-  <div style={{
-    marginTop: spacing.medium,
-    overflowX: 'scroll',
-  }}>
-    <div style={{
-      background: uiGroups.backgroundShade,
-      display: 'inline-block',
-    }}>
-      {strings.map((string, stringIndex) => (
-        <div 
-          key={stringIndex}
-          style={{
-            display: 'flex',
-          }}
-        >
-          {string.map((degree, noteIndex) => (
-            <div 
-              key={noteIndex}
-              style={{
-                width: fretSize,
-                display: 'flex',
-                position: 'relative',
-                justifyContent: 'center',
-                alignItems: 'center',
-                paddingTop: spacing.xxsmall + (noteSize / 3),
-                paddingBottom: spacing.xxsmall + (noteSize / 3),
-                borderLeft: `${borderSizes.small}px solid ${uiGroups.background}`,
-                borderRight: (noteIndex === string.length - 1)
-                  ? `${borderSizes.small}px solid ${uiGroups.background}`
-                  : '0',
-              }}
-            >
-              <div style={{
-                height: stringIndex + 1,
-                width: fretSize,
-                background: uiGroups.background,
-                position: 'absolute',
-              }} />
-              <div style={{
-                borderRadius: '100%',
-                background: degree 
-                  ? (highlightedDegreesByString[stringIndex + 1]) && (highlightedDegreesByString[stringIndex + 1].includes(degree))
-                    ? uiGroups.userCurrentState
-                    : uiGroups.background
-                  : 'transparent',
-                width: noteSize,
-                height: noteSize,
-                zIndex: '1',
-              }} />
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  </div>
-)
-
-const Selector = ({title, onClick, selectedItem, items}) => (
-  <div>
-    <Heading level={4}>
-      {title}
-    </Heading>
-
-    <div style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      marginBottom: spacing.large,
-    }}>
-      {items.map((item, index) => (
-        <div
-          key={index}
-          style={{
-            marginRight: spacing.small,
-            marginTop: spacing.small,
-          }}
-        >
-          <Button
-            type={selectedItem === item ? 'primary' : 'secondary'}
-            onClick={onClick.bind(this, item)}
-          >
-            {startCase(item)}
-          </Button>
-        </div>
-      ))}
-    </div>
-  </div>
-)
-
-class GuitarPatternsSelector extends Component {
-
-  static defaultProps = {
-    selectedDegree: 'None',
-    selectedType: 'singleNotes',
-  }
-
-  constructor() {
-    super(...arguments);
-    this.state = {
-      selectedDegree: this.props.selectedDegree,
-      selectedType: this.props.selectedType,
-      highlightedDegreesByString: this.getHighlightedDegreesByString(this.props.selectedType, this.props.selectedDegree), // tried to do this as initializer for > hour :-(
-    }
-  }
-
-  handleDegreeChange = (selectedDegree) => {
-    this.setState({selectedDegree}, this.handleOptionsChange)
-  }
-
-  handleTypeChange = (selectedType) => {
-    this.setState({selectedType}, () => this.handleOptionsChange)
-  }
-
-  handleOptionsChange = () => {
-    this.setState({ 
-      highlightedDegreesByString: this.getHighlightedDegreesByString(this.state.selectedType, this.state.selectedDegree)
-    });
-  }
-
-  getHighlightedDegreesByString = (selectedType, selectedDegree) => {
-
+const getHighlightedDegreesByString = (selectedType, selectedDegree) => { 
     const intervalToDegree = interval => {
       const remainder = (selectedDegree + (interval - 1)) % 7
       return remainder === 0
@@ -188,11 +64,110 @@ class GuitarPatternsSelector extends Component {
         5: [intervalToDegree(4), selectedDegree],
         6: [selectedDegree],
       },
-    }[selectedType];
+    }[selectedType]
+}
+
+
+const GuitarPattern = ({
+  strings,
+  highlightedDegreesByString,
+  noteSize = 20,
+  fretSize = 60,
+}) => (
+  <div style={{
+    marginTop: spacing.medium,
+      overflowX: 'scroll',
+  }}>
+  <div style={{
+    background: uiGroups.backgroundShade,
+      display: 'inline-block',
+  }}>
+  {strings.map((string, stringIndex) => (
+    <div 
+      key={stringIndex}
+      style={{
+        display: 'flex',
+      }}
+    >
+      {string.map((degree, noteIndex) => (
+        <div 
+          key={noteIndex}
+          style={{
+            width: fretSize,
+              display: 'flex',
+              position: 'relative',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingTop: spacing.xxsmall + (noteSize / 3),
+              paddingBottom: spacing.xxsmall + (noteSize / 3),
+              borderLeft: `${borderSizes.small}px solid ${uiGroups.background}`,
+              borderRight: (noteIndex === string.length - 1)
+              ? `${borderSizes.small}px solid ${uiGroups.background}`
+              : '0',
+          }}
+        >
+          <div style={{
+            height: stringIndex + 1,
+              width: fretSize,
+              background: uiGroups.background,
+              position: 'absolute',
+          }} />
+        <div style={{
+          borderRadius: '100%',
+            background: degree 
+            ? (highlightedDegreesByString[stringIndex + 1]) && (highlightedDegreesByString[stringIndex + 1].includes(degree))
+            ? uiGroups.userCurrentState
+            : uiGroups.background
+            : 'transparent',
+            width: noteSize,
+            height: noteSize,
+            zIndex: '1',
+        }} />
+    </div>
+      ))}
+    </div>
+  ))}
+</div>
+  </div>
+)
+
+const SelectorItem =({children}) => (
+  <div
+    style={{
+      marginRight: spacing.small,
+        marginTop: spacing.small,
+    }}
+  >
+    {children}
+  </div>
+);
+
+const Selector = ({children, title}) => (
+  <div>
+    <Heading level={4}>
+      {title}
+    </Heading>
+
+    <div style={{
+      display: 'flex',
+        flexWrap: 'wrap',
+        marginBottom: spacing.large,
+    }}>
+    {children}
+  </div>
+</div>
+)
+
+class GuitarPatternsSelector extends Component {
+
+  static defaultProps = {
+    selectedDegree: 'None',
+    selectedType: 'singleNotes',
   }
 
   render() {
-    const {selectedDegree, selectedType, highlightedDegreesByString} = this.state
+    const {selectedDegree, selectedType } = this.props
+    const highlightedDegreesByString = getHighlightedDegreesByString(this.props.selectedType, this.props.selectedDegree)
     const octave = [1, 0, 2, 0, 3, 4, 0, 5, 0, 6, 0, 7]
     const doubleOctave = octave.concat(octave)
     const strings = [
@@ -224,25 +199,49 @@ class GuitarPatternsSelector extends Component {
 
     <Selector
       title='Degree'
-      onClick={this.handleDegreeChange}
-      selectedItem={selectedDegree}
-      items={['None', 1, 2, 3, 4, 5, 6, 7]}
-    />
+    >
+      {['None', 1, 2, 3, 4, 5, 6, 7].map((degree) => (
+        <SelectorItem key={degree}>
+          <Link
+            href={`/projects/guitar-lessons?type=${selectedType}&degree=${degree}`}
+            scroll={false}
+          >
+            <Button
+              type={selectedDegree === degree ? 'primary' : 'secondary'}
+            >
+              {startCase(degree)}
+            </Button>
+          </Link>
+        </SelectorItem>
+      ))}
+    </Selector>
 
-  <Selector
-    title='Type'
-    onClick={this.handleTypeChange}
-    selectedItem={selectedType}
-    items={[
-      'singleNotes',
-      'powerChords',
-      'basicChords',
-      'seventhChords',
-      'ninthChords',
-      'eleventhChords',
-      'quartalChords',
-    ]}
-  />
+    <Selector
+      title='Type'
+    >
+      {[
+        'singleNotes',
+        'powerChords',
+        'basicChords',
+        'seventhChords',
+        'ninthChords',
+        'eleventhChords',
+        'quartalChords',
+      ].map((type) => (
+        <SelectorItem key={type}>
+          <Link
+            href={`/projects/guitar-lessons?type=${type}&degree=${selectedDegree}`}
+            scroll={false}
+          >
+            <Button
+              type={selectedType === type ? 'primary' : 'secondary'}
+            >
+              {startCase(type)}
+            </Button>
+          </Link>
+        </SelectorItem>
+      ))}
+    </Selector>
 
       </div>
     )

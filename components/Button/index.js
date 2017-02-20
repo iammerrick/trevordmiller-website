@@ -13,7 +13,7 @@ const stylesByType = {
 }
 
 export default ({onClick, type = 'primary', children}) => (
-  <a 
+  <button 
     onClick={onClick}
     style={{
       paddingTop: spacing.medium,
@@ -22,10 +22,11 @@ export default ({onClick, type = 'primary', children}) => (
       paddingRight: spacing.large,
       display: 'inline-block',
       textAlign: 'center',
+      border: 'none',
       borderRadius: borderRadii.medium,
       ...stylesByType[type]
     }}
   >
     {children}
-  </a>
+  </button>
 )
