@@ -7,64 +7,64 @@ import Heading from '../../../components/Heading'
 import Button from '../../../components/Button'
 
 const getHighlightedDegreesByString = (selectedType, selectedDegree) => { 
-    const intervalToDegree = interval => {
-      const remainder = (selectedDegree + (interval - 1)) % 7
-      return remainder === 0
-        ? 7
-        : remainder
-    }
+  const intervalToDegree = interval => {
+    const remainder = (selectedDegree + (interval - 1)) % 7
+    return remainder === 0
+      ? 7
+      : remainder
+  }
 
-    return {
-      singleNotes: {
-        1: [selectedDegree],
-        2: [selectedDegree],
-        3: [selectedDegree],
-        4: [selectedDegree],
-        5: [selectedDegree],
-        6: [selectedDegree],
-      },
-      powerChords: {
-        3: [selectedDegree],
-        4: [selectedDegree, intervalToDegree(5)],
-        5: [selectedDegree, intervalToDegree(5)],
-        6: [selectedDegree],
-      },
-      basicChords: {
-        2: [intervalToDegree(3)],
-        3: [intervalToDegree(3), selectedDegree],
-        4: [selectedDegree, intervalToDegree(5)],
-        5: [intervalToDegree(5), selectedDegree],
-        6: [selectedDegree],
-      },
-      seventhChords: {
-        2: [intervalToDegree(3)],
-        3: [intervalToDegree(3), intervalToDegree(7)],
-        4: [intervalToDegree(7), intervalToDegree(3)],
-        5: [intervalToDegree(3), selectedDegree],
-        6: [selectedDegree],
-      },
-      ninthChords: {
-        2: [intervalToDegree(2)],
-        3: [intervalToDegree(2), intervalToDegree(7)],
-        4: [intervalToDegree(7), intervalToDegree(3)],
-        5: [intervalToDegree(3), selectedDegree],
-        6: [selectedDegree],
-      },
-      eleventhChords: {
-        2: [intervalToDegree(4)],
-        3: [intervalToDegree(4), intervalToDegree(7)],
-        4: [intervalToDegree(7), intervalToDegree(3)],
-        5: [intervalToDegree(3), selectedDegree],
-        6: [selectedDegree],
-      },
-      quartalChords: {
-        2: [intervalToDegree(3)],
-        3: [intervalToDegree(3), intervalToDegree(7)],
-        4: [intervalToDegree(7), intervalToDegree(4)],
-        5: [intervalToDegree(4), selectedDegree],
-        6: [selectedDegree],
-      },
-    }[selectedType]
+  return {
+    singleNotes: {
+      1: [selectedDegree],
+      2: [selectedDegree],
+      3: [selectedDegree],
+      4: [selectedDegree],
+      5: [selectedDegree],
+      6: [selectedDegree],
+    },
+    powerChords: {
+      3: [selectedDegree],
+      4: [selectedDegree, intervalToDegree(5)],
+      5: [selectedDegree, intervalToDegree(5)],
+      6: [selectedDegree],
+    },
+    basicChords: {
+      2: [intervalToDegree(3)],
+      3: [intervalToDegree(3), selectedDegree],
+      4: [selectedDegree, intervalToDegree(5)],
+      5: [intervalToDegree(5), selectedDegree],
+      6: [selectedDegree],
+    },
+    seventhChords: {
+      2: [intervalToDegree(3)],
+      3: [intervalToDegree(3), intervalToDegree(7)],
+      4: [intervalToDegree(7), intervalToDegree(3)],
+      5: [intervalToDegree(3), selectedDegree],
+      6: [selectedDegree],
+    },
+    ninthChords: {
+      2: [intervalToDegree(2)],
+      3: [intervalToDegree(2), intervalToDegree(7)],
+      4: [intervalToDegree(7), intervalToDegree(3)],
+      5: [intervalToDegree(3), selectedDegree],
+      6: [selectedDegree],
+    },
+    eleventhChords: {
+      2: [intervalToDegree(4)],
+      3: [intervalToDegree(4), intervalToDegree(7)],
+      4: [intervalToDegree(7), intervalToDegree(3)],
+      5: [intervalToDegree(3), selectedDegree],
+      6: [selectedDegree],
+    },
+    quartalChords: {
+      2: [intervalToDegree(3)],
+      3: [intervalToDegree(3), intervalToDegree(7)],
+      4: [intervalToDegree(7), intervalToDegree(4)],
+      5: [intervalToDegree(4), selectedDegree],
+      6: [selectedDegree],
+    },
+  }[selectedType]
 }
 
 
@@ -155,7 +155,7 @@ const Selector = ({children, title}) => (
     }}>
     {children}
   </div>
-</div>
+  </div>
 )
 
 class GuitarPatternsSelector extends Component {
@@ -167,7 +167,10 @@ class GuitarPatternsSelector extends Component {
 
   render() {
     const {selectedDegree, selectedType } = this.props
-    const highlightedDegreesByString = getHighlightedDegreesByString(this.props.selectedType, this.props.selectedDegree)
+    const highlightedDegreesByString = getHighlightedDegreesByString(
+      this.props.selectedType, 
+      this.props.selectedDegree
+    )
     const octave = [1, 0, 2, 0, 3, 4, 0, 5, 0, 6, 0, 7]
     const doubleOctave = octave.concat(octave)
     const strings = [
@@ -243,7 +246,7 @@ class GuitarPatternsSelector extends Component {
       ))}
     </Selector>
 
-      </div>
+  </div>
     )
   }
 }
@@ -277,7 +280,10 @@ const GuitarLessonIndex = ({ selectedDegree, selectedType}) => (
       {
         title: 'The in-key guitar pattern',
         component: (
-          <GuitarPatternsSelector selectedDegree={selectedDegree} selectedType={selectedType} />
+          <GuitarPatternsSelector 
+            selectedDegree={isNaN(selectedDegree) ? selectedDegree : parseInt(selectedDegree)}
+            selectedType={selectedType} 
+          />
         ),
       },
     ]}
@@ -285,7 +291,7 @@ const GuitarLessonIndex = ({ selectedDegree, selectedType}) => (
 )
 
 GuitarLessonIndex.getInitialProps = ({query: { degree, type}}) => ({
-  selectedDegree: degree ? parseInt(degree) : undefined, 
+  selectedDegree: degree, 
   selectedType: type,
 })
 
